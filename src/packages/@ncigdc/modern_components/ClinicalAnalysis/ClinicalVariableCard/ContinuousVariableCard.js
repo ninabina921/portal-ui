@@ -416,7 +416,9 @@ export default compose(
     }) => {
       // prevent survival API requests on mount
       // when a different plot is selected
-      if (active_chart !== 'survival') {
+      // or continuous bins haven't loaded yet.
+      // if bins are truly empty, the card will show "no data".
+      if (active_chart !== 'survival' || isEmpty(bins)) {
         return {
           survivalPlotValues: [],
           survivalTableValues: [],
