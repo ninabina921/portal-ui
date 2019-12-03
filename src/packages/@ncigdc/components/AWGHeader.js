@@ -33,6 +33,7 @@ const styles = {
 const Header = ({
   isCollapsed,
   isInSearchMode,
+  onHeaderMount,
   setIsCollapsed,
   setIsInSearchMode,
   theme,
@@ -41,6 +42,7 @@ const Header = ({
   <header
     className="navbar navbar-default navbar-static-top"
     id="header"
+    ref={onHeaderMount}
     role="banner"
     >
     <div className="container-fluid">
@@ -151,5 +153,5 @@ export default compose(
     user: state.auth.user,
   })),
   withTheme,
-  pure
+  pure,
 )(Header);

@@ -54,6 +54,7 @@ const Header = ({
   isCollapsed,
   isInSearchMode,
   notifications,
+  onHeaderMount,
   setIsCollapsed,
   setIsInSearchMode,
   theme,
@@ -62,6 +63,7 @@ const Header = ({
   <header
     className="navbar navbar-default navbar-static-top"
     id="header"
+    ref={onHeaderMount}
     role="banner"
     >
     {notifications.map(n => (
@@ -176,8 +178,7 @@ const Header = ({
                   <li>
                     <LoginButton />
                   </li>
-                )
-              }
+                )}
               <li>
                 <CartLink>
                   {count => (
@@ -286,5 +287,5 @@ export default compose(
     },
   }),
   withTheme,
-  pure
+  pure,
 )(Header);

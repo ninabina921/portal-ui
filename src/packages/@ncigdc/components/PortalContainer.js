@@ -8,6 +8,8 @@ import {
   lifecycle,
   pure,
   setDisplayName,
+  withHandlers,
+  withPropsOnChange,
 } from 'recompose';
 import { isEqual } from 'lodash';
 
@@ -44,7 +46,8 @@ const SkipLink = styled.a({
 });
 
 const PortalContainer = ({
-  notifications,
+  headerHeight,
+  onHeaderMount,
 }: {
   notifications: Array<{ dismissed: string }>,
 }) => (
@@ -57,14 +60,13 @@ const PortalContainer = ({
     >
     <SkipLink href="#skip">Skip to Main Content</SkipLink>
     <ProgressContainer />
-    {AWG ? <AWGHeader /> : <Header />}
+    {AWG ? <AWGHeader onHeaderMount={onHeaderMount} /> : <Header onHeaderMount={onHeaderMount} />}
     <div
       id="skip"
       role="main"
       style={{
         paddingBottom: '120px',
-        paddingTop: `calc(51px + ${notifications.filter(n => !n.dismissed)
-          .length * 40}px)`,
+        paddingTop: headerHeight(),
         transition: 'padding 0.25s ease',
       }}
       >
@@ -82,6 +84,23 @@ export default compose(
   setDisplayName('EnhancedPortalContainer'),
   withRouter,
   connect(store => ({ notifications: store.bannerNotification })),
+  withHandlers(() => {
+    let headerRef = null;
+
+    return {
+      getHeaderRef: () => () => headerRef,
+      onHeaderMount: () => ref => (headerRef = ref),
+    };
+  }),
+  withPropsOnChange(
+    ['notifications'],
+    ({ getHeaderRef }) => ({
+      headerHeight: () => {
+        const headerRef = getHeaderRef();
+        return headerRef ? headerRef.offsetHeight : 51;
+      },
+    }),
+  ),
   lifecycle({
     componentDidMount(): void {
       Cookies.get(FIRST_TIME_KEY) || this.props.dispatch(setModal(
