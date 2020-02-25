@@ -42,15 +42,15 @@ const highContrastPallet = [
 
 const collisionDataBoxStyle = {
   border: 'solid 1px rgb(186,186,186)',
+  fontSize: '10px',
   marginBottom: '4px',
   marginLeft: '20px',
-  fontSize: '10px',
   padding: '20px 20px 20px 10px',
 };
 const LinkSpan = styled.span({
-  textDecoration: 'underline',
   color: ({ theme }) => theme.primary,
   cursor: 'pointer',
+  textDecoration: 'underline',
 });
 
 export default compose(
@@ -188,11 +188,11 @@ export default compose(
           <div style={{ position: 'relative' }}>
             <span
               style={{
-                transform: 'rotate(270deg)',
-                display: 'inline-block',
-                position: 'relative',
-                left: -20,
                 bottom: -100,
+                display: 'inline-block',
+                left: -20,
+                position: 'relative',
+                transform: 'rotate(270deg)',
               }}
               >
               # Cases
@@ -225,44 +225,29 @@ export default compose(
                     <span>
                       <div>
                         <b>
-DNA Change:
-                          {d.genomic_dna_change}
+                          {`DNA Change: ${d.genomic_dna_change}`}
                         </b>
                       </div>
                       <div>
-ID:
-                        {d.id}
+                        {`ID: ${d.id}`}
                       </div>
                       <div>
-AA Change:
-                        {d.aa_change}
+                        {`AA Change: ${d.aa_change}`}
                       </div>
                       <div>
-# of Cases:
-                        {cases.toLocaleString()}
+                        {`# of Cases: ${cases.toLocaleString()}`}
                       </div>
                       <div>
-VEP Impact:
-                        {d.impact}
+                        {`VEP Impact: ${d.impact}`}
                       </div>
                       {d.sift_impact && (
                         <div>
-                            SIFT Impact:
-                          {' '}
-                          {d.sift_impact}
-, score:
-                          {' '}
-                          {d.sift_score}
+                          {`SIFT Impact: ${d.sift_impact}, score: ${d.sift_score}`}
                         </div>
                       )}
                       {d.polyphen_impact && (
                         <div>
-                            PolyPhen Impact:
-                          {' '}
-                          {d.polyphen_impact}
-, score:
-                          {' '}
-                          {d.polyphen_score}
+                          {`PolyPhen Impact: ${d.polyphen_impact}, score: ${d.polyphen_score}`}
                         </div>
                       )}
                     </span>,
@@ -307,15 +292,15 @@ VEP Impact:
                       if (min === d.start && max === d.end) {
                         setState(s => ({
                           ...s,
-                          min: 0,
                           max: activeTranscript.length_amino_acid,
+                          min: 0,
                         }));
                         setTooltip(null);
                       } else {
                         setState(s => ({
                           ...s,
-                          min: d.start,
                           max: d.end,
+                          min: d.start,
                         }));
                         setTooltip(
                           <span>
@@ -397,9 +382,9 @@ VEP Impact:
                 <span
                   key={d.id}
                   style={{
-                    padding: '10px 0px 5px 0px',
                     display: 'flex',
                     flexDirection: 'row',
+                    padding: '10px 0px 5px 0px',
                   }}
                   >
                   <div>
@@ -453,8 +438,8 @@ VEP Impact:
           setState={setState}
           state={state}
           style={{
-            width: STATS_WIDTH,
             flex: 'none',
+            width: STATS_WIDTH,
           }}
           toggleBlacklistItem={toggleBlacklistItem}
           />
