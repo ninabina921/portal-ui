@@ -415,30 +415,20 @@ VEP Impact:
                   <div>
                     <div>
                       <b>
-DNA Change:
-                        {' '}
-                        {d.genomic_dna_change}
+                        {`DNA Change: ${d.genomic_dna_change}`}
                       </b>
                     </div>
                     <div>
-ID:
-                      {' '}
-                      {d.id}
+                      {`ID: ${d.id}`}
                     </div>
                     <div>
-AA Change:
-                      {' '}
-                      {d.aa_change}
+                      {`AA Change: ${d.aa_change}`}
                     </div>
                     <div>
-# of Cases:
-                      {' '}
-                      {d.y.toLocaleString()}
+                      {`# of Cases: ${d.y.toLocaleString()}`}
                     </div>
                     <div>
-Functional Impact:
-                      {' '}
-                      {d.impact}
+                      {`Functional Impact: ${d.impact}`}
                     </div>
                     <LinkSpan onClick={() => push(`/ssms/${d.id}`)}>
                       View Mutation
