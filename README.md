@@ -38,7 +38,12 @@ brew update
 brew install watchman
 ```
 
-We recommend using **Node v8 (npm v5)**.
+## Updated Versions and Dependencies
+
+We recommend using **Node v13.x and up (npm v6.x)**.
+
+This application utilizes the Relay Classic API which reached EOL after react-relay v2.x
+Added @types/relay-runtime to lock version to 1.3.8.
 
 ```
 npm i
