@@ -23,8 +23,9 @@ import {
 } from '@ncigdc/utils/constants';
 
 import {
-  checkUserAccess,
+  // checkUserAccess,
   reshapeSummary,
+  reshapeUserAccess,
 } from './helpers';
 
 
@@ -33,12 +34,13 @@ export default compose(
   connect(state => ({
     token: state.auth.token,
     user: state.auth.user,
+    userControlledAccess: state.auth.userControlledAccess,
   })),
   withRouter,
-  withState('userAccessList', 'setUserAccessList', []),
-  withState('studiesList', 'setStudiesList', []),
+  withState('userAccessList', 'setUserAccessList', ({ userControlledAccess }) => Object.keys(userControlledAccess)),
+  withState('studiesSummary', 'setStudiesSummary', {}),
   withHandlers({
-    fetchStudiesList: ({ setStudiesList }) => () => (
+    fetchStudiesList: ({ setStudiesSummary }) => () => (
       fetchApi(
         '/studies/summary/all',
         {
@@ -48,25 +50,36 @@ export default compose(
         },
       )
         .then(({ data } = {}) => {
-          data && setStudiesList(reshapeSummary(data));
+          data && setStudiesSummary(reshapeSummary(data));
         })
         .catch(error => console.error(error))
     ),
-    fetchUserAccess: ({ setUserAccessList }) => () => (
-      // fetchApi(
-      //   '/studies/user',
-      //   {
-      //     credentials: 'same-origin',
-      //     headers: {
-      //       'Access-Control-Allow-Origin': true,
-      //       'Content-Type': 'application/json',
-      //       'X-Auth-Token': 'secret admin token',
-      //     },
-      //   },
-      // ).then((response) => {
-      //   console.log('user?', response);
-      // })
-      setUserAccessList(['tcga'])
+    fetchUserAccess: ({
+      dispatch,
+      studiesSummary,
+      user,
+    }) => () => (
+      user && fetchApi(
+        '/studies/user',
+        {
+          credentials: 'same-origin',
+          headers: {
+            'Access-Control-Allow-Origin': true,
+            'Content-Type': 'application/json',
+            'X-Auth-Token': 'secret admin token',
+          },
+        },
+      )
+        .then(({ data }) => {
+          dispatch({
+            payload: reshapeUserAccess(data.controlled),
+            type: 'gdc/USER_CONTROLLED_ACCESS_SUCCESS',
+          });
+        })
+        .catch(error => {
+          console.error('while fetching user controlled access', error);
+          dispatch({ type: 'gdc/USER_CONTROLLED_ACCESS_CLEAR' });
+        })
     ),
   }),
   withPropsOnChange(
@@ -93,19 +106,19 @@ export default compose(
         query: {
           controlled,
         },
-        studiesList,
+        studiesSummary,
         user,
       },
       {
         query: {
           controlled: nextControlled,
         },
-        studiesList: nextStudiesList,
+        studiesSummary: nextStudiesSummary,
         user: nextUser,
       },
     ) => !(
       controlled === nextControlled &&
-      isEqual(studiesList, nextStudiesList) &&
+      isEqual(studiesSummary, nextStudiesSummary) &&
       isEqual(user, nextUser)
     ),
     ({
@@ -118,7 +131,7 @@ export default compose(
       query: {
         controlled = '',
       },
-      studiesList,
+      studiesSummary,
       user,
       userAccessList,
     }) => {
@@ -167,8 +180,7 @@ export default compose(
                 activeControlledPrograms={controlledStudies}
                 closeModal={() => dispatch(setModal(null))}
                 querySelectedStudies={() => {}}
-                studiesList={studiesList}
-                userAccessList={userAccessList}
+                studiesSummary={studiesSummary}
                 />,
             ));
           },

@@ -26,7 +26,7 @@ const ControlledAccessModal = ({
   handleProgramSelect,
   selectedStudies,
   setSelectedStudies,
-  studiesList,
+  studiesSummary,
   user,
   userAccessList,
 }) => (
@@ -66,7 +66,7 @@ const ControlledAccessModal = ({
         handleProgramSelect,
         selectedStudies,
         setSelectedStudies,
-        studiesList,
+        studiesSummary,
         user,
         userAccessList,
       })}
@@ -100,6 +100,7 @@ export default compose(
   setDisplayName('EnhancedControlledAccessModal'),
   connect(state => ({
     user: state.auth.user,
+    userAccessList: Object.keys(state.auth.userControlledAccess),
   })),
   withState(
     'selectedStudies',
